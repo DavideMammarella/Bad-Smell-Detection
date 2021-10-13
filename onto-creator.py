@@ -2,26 +2,29 @@ from owlready2 import *
 import types
 import ast
 
+onto = get_ontology("http://test.org/onto.owl")  # create an owlready2 ontology
+onto_path.append("output")  # set output directory for the ontology
 
-class AstVisitor(ast.NodeVisitor, owl_ontology):
+
+class AstVisitor(ast.NodeVisitor):
     """
         This class is a subclass of ast.NodeVisitor, with the purpose of adding
         custom visitor methods.
     """
 
-    def visit(self, node):
-        super().visit(node)
+    def visit_ClassDef(self, node: ast.ClassDef):
 
-        # TODO: implement the visit of the AST
-        # create a new class in the ontology for each ClassDef object:
-        ## superclass Node of tree.py becomes Thing in the ontology: new_class("name", (Thing,));
-        ## otherwise get the superclass from the ontology under construction(onto): new_class("name", (onto["superclassName"],)
+        with onto:
+            for elem in node.bases:  # for each ClassDef object:
+                # print("ClassDef object:", node.name, "| Superclass:", elem.id)
+                if (elem.id == "Node"):
+                    types.new_class(node.name, (Thing,))  # superclass Node of tree.py becomes Thing in the ontology
+                else:
+                    types.new_class(node.name, (onto[elem.id],))  # otherwise get the superclass from the ontology under construction(onto)
 
 
 def main():
     pyfile = open("input/tree.py")  # get tree.py as input file
-    onto = get_ontology("http://test.org/onto.owl")  # create an owlready2 ontology
-    onto_path.append("output")  # set output directory for the ontology
 
     try:
         ast_of_pyfile = ast.parse(pyfile.read())  # get the AST of input file
@@ -32,4 +35,5 @@ def main():
         pyfile.close()
 
 
-main()
+if __name__ == "__main__":
+    main()
