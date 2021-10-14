@@ -1,0 +1,1 @@
+# prendi in input il chess e crei una antologia
