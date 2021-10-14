@@ -4,6 +4,7 @@ import ast
 
 onto = get_ontology("http://test.org/onto.owl")  # create an owlready2 ontology
 
+
 class AstVisitor(ast.NodeVisitor):
     """
         This class is a subclass of ast.NodeVisitor, with the purpose of adding
@@ -52,11 +53,21 @@ def main():
     try:
         ast_of_pyfile = ast.parse(pyfile.read())  # get the AST of input file
         AstVisitor().visit(ast_of_pyfile)  # visit the AST
-        onto.save(file="output/tree", format="rdfxml")  # save the ontology
+        onto.save(file="output/tree.owl", format="rdfxml")  # save the ontology
 
     finally:
         pyfile.close()
 
 
+def test_ontology():
+    onto = get_ontology("output/tree.owl").load()
+    cd = onto["ClassDeclaration"]
+    assert cd.name == "ClassDeclaration"
+    assert len(cd.is_a) == 1
+    assert cd.is_a[0].name == "TypeDeclaration"
+    print("Ontology is fine!")
+
+
 if __name__ == "__main__":
     main()
+    test_ontology()
