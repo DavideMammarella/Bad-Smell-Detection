@@ -53,14 +53,14 @@ def main():
     try:
         ast_of_pyfile = ast.parse(pyfile.read())  # get the AST of input file
         AstVisitor().visit(ast_of_pyfile)  # visit the AST
-        onto.save(file="output/tree.owl", format="rdfxml")  # save the ontology
+        onto.save(file="output/tree_section1.owl", format="rdfxml")  # save the ontology
 
     finally:
         pyfile.close()
 
 
 def test_ontology():
-    onto = get_ontology("output/tree.owl").load()
+    onto = get_ontology("output/tree_section1.owl").load()
     cd = onto["ClassDeclaration"]
     assert cd.name == "ClassDeclaration"
     assert len(cd.is_a) == 1
