@@ -65,7 +65,6 @@ def test_ontology():
     assert cd.name == "ClassDeclaration"
     assert len(cd.is_a) == 1
     assert cd.is_a[0].name == "TypeDeclaration"
-    print("Ontology is fine!")
 
 
 if __name__ == "__main__":

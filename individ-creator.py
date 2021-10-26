@@ -1,5 +1,7 @@
 from owlready2 import *
 import ast
+import os
+from os.path import isfile
 import javalang  # https://github.com/c2nes/javalang
 
 
@@ -31,27 +33,32 @@ def populateOntology(onto, tree):
 
 def main():
     onto = get_ontology("tree.owl").load()  # load the ontology created in step 1 (onto-creator.py)
-    # TODO: Ask if it is possible to upload multiple file in plain Python (not Panda)
-    javafile = open(
-        "input/android-chess/app/src/main/java/jwtc/chess/Pos.java").read()  # get a java file of android-chess as input file
-    tree_of_javafile = javalang.parse.parse(javafile)  # get the TREE of input file
-    populateOntology(onto, tree_of_javafile) # populate the ontology
-    onto.save(file="tree.owl", format="rdfxml")  # save the ontology
+
+    # multiple javafile processing (stackoverflow.com/questions/58108964/how-to-open-multiple-files-in-loop-in-python)
+    folderpath = r"input/android-chess/app/src/main/java/jwtc/chess"  # make sure to put the 'r' in front
+    filepaths = [os.path.join(folderpath, name) for name in os.listdir(folderpath)]
+    for path in filepaths:
+        if isfile(path):
+            with open(path, 'r') as f:
+                #print("Populate ontology from file: ", f.name)
+                javafile = f.read() # get a java file of android-chess as input file
+                tree_of_javafile = javalang.parse.parse(javafile)  # get the TREE of input file
+                populateOntology(onto, tree_of_javafile) # populate the ontology
+                onto.save(file="tree.owl", format="rdfxml")  # save the ontology
 
 
-# def test_ontology():
-#     onto = get_ontology("tree.owl").load()
-#     tree = javalang.parse.parse("class A { int x, y; }")
-#     populateOntology(onto, tree)
-#     a = onto['ClassDeclaration'].instances()[0]
-#     assert a.body[0].is_a[0].name == 'FieldDeclaration'
-#     assert a.body[0].jname[0] == 'x'
-#     assert a.body[1].is_a[0].name == 'FieldDeclaration'
-#     assert a.body[1].jname[0] == 'y'
-#     print("Ontology is fine!")
+def test_ontology():
+    onto = get_ontology("tree.owl").load()
+    tree = javalang.parse.parse("class A { int x, y; }")
+    populateOntology(onto, tree)
+    a = onto['ClassDeclaration'].instances()[0]
+    assert a.body[0].is_a[0].name == 'FieldDeclaration'
+    assert a.body[0].jname[0] == 'x'
+    assert a.body[1].is_a[0].name == 'FieldDeclaration'
+    assert a.body[1].jname[0] == 'y'
 # TODO: Ask why the method seems working on a java class but not on the unit test
 
 
 if __name__ == "__main__":
     main()
-    # test_ontology()
+    test_ontology()
