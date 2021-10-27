@@ -16,14 +16,17 @@ def populateOntology(onto, tree):
                     md = onto["MethodDeclaration"]()
                     md.jname = [node.name]
                     cd.body.append(md)
-                elif type(body_cd) is javalang.tree.FieldDeclaration:
-                    fd = onto["FieldDeclaration"]()
-                    fd.jname = [node.name]
-                    cd.body.append(fd)
+                    # section3
+
                 elif type(body_cd) is javalang.tree.ConstructorDeclaration:
                     cdec = onto["ConstructorDeclaration"]()
                     cdec.jname = [node.name]
                     cd.body.append(cdec)
+                    # section 3
+                elif type(body_cd) is javalang.tree.FieldDeclaration:
+                    fd = onto["FieldDeclaration"]()
+                    fd.jname = [node.name]
+                    cd.body.append(fd)
             """
                 For each class member (MethodDeclaration/FieldDeclaration/ConstructorDeclaration) in the
                 "body" of a ClassDeclaration create a MethodDeclaration/FieldDeclaration/ConstructorDeclaration
@@ -43,7 +46,7 @@ def main():
                 javafile = f.read() # get a java file of android-chess as input file
                 tree_of_javafile = javalang.parse.parse(javafile)  # get the TREE of input file
                 populateOntology(onto, tree_of_javafile) # populate the ontology
-                onto.save(file="tree.owl", format="rdfxml")  # save the ontology
+                onto.save(file="tree2.owl", format="rdfxml")  # save the ontology
 
 
 def test_ontology():
