@@ -14,7 +14,7 @@ def populateOntology(onto, tree):
             for body_cd in node.body:
                 if type(body_cd) is javalang.tree.MethodDeclaration:
                     md = onto["MethodDeclaration"]()
-                    md.jname = [node.name]
+                    md.jname = [body_cd.name]
                     cd.body.append(md)
                     # create statement instances
                     for statement in body_cd:
@@ -24,7 +24,7 @@ def populateOntology(onto, tree):
                             cd.body.append(statement_instance)
                 elif type(body_cd) is javalang.tree.ConstructorDeclaration:
                     cdec = onto["ConstructorDeclaration"]()
-                    cdec.jname = [node.name]
+                    cdec.jname = [body_cd.name]
                     cd.body.append(cdec)
                     # create statement instances
                     for statement in body_cd:
@@ -34,7 +34,7 @@ def populateOntology(onto, tree):
                             cdec.body.append(statement_instance)
                 elif type(body_cd) is javalang.tree.FieldDeclaration:
                     fd = onto["FieldDeclaration"]()
-                    fd.jname = [node.name]
+                    fd.jname = [body_cd.name]
                     cd.body.append(fd)
             """
                 For each class member (MethodDeclaration/FieldDeclaration/ConstructorDeclaration) in the
@@ -66,13 +66,13 @@ def test_ontology():
     onto = get_ontology("tree.owl").load()
     tree = javalang.parse.parse("class A { int x, y; }")
     populateOntology(onto, tree)
-    a = onto['ClassDeclaration'].instances()
-    # assert a.body[0].is_a[0].name == 'FieldDeclaration'
-    # assert a.body[0].jname[0] == 'x'
-    # assert a.body[1].is_a[0].name == 'FieldDeclaration'
-    # assert a.body[1].jname[0] == 'y'
+    a = onto['ClassDeclaration'].instances()[0]
+    assert a.body[0].is_a[0].name == 'FieldDeclaration'
+    assert a.body[0].jname[0] == 'x'
+    assert a.body[1].is_a[0].name == 'FieldDeclaration'
+    assert a.body[1].jname[0] == 'y'
 
 
 if __name__ == "__main__":
     main()
-    # test_ontology()
+    test_ontology()
