@@ -40,7 +40,6 @@ def main():
     for path in filepaths:
         if isfile(path):
             with open(path, 'r') as f:
-                #print("Populate ontology from file: ", f.name)
                 javafile = f.read() # get a java file of android-chess as input file
                 tree_of_javafile = javalang.parse.parse(javafile)  # get the TREE of input file
                 populateOntology(onto, tree_of_javafile) # populate the ontology
@@ -56,7 +55,6 @@ def test_ontology():
     assert a.body[0].jname[0] == 'x'
     assert a.body[1].is_a[0].name == 'FieldDeclaration'
     assert a.body[1].jname[0] == 'y'
-# TODO: Ask why the method seems working on a java class but not on the unit test
 
 
 if __name__ == "__main__":
