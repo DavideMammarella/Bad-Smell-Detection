@@ -15,27 +15,28 @@ def populateOntology(onto, tree):
                 if type(body_cd) is javalang.tree.MethodDeclaration:
                     md = onto["MethodDeclaration"]()
                     md.jname = [body_cd.name]
-                    cd.body.append(md)
                     # create statement instances
                     for statement in body_cd:
                         if type(statement) is javalang.tree.Statement:
                             statement_name = type(statement).__name__
                             statement_instance = onto[statement_name]()
                             cd.body.append(statement_instance)
+                    cd.body.append(md)
                 elif type(body_cd) is javalang.tree.ConstructorDeclaration:
                     cdec = onto["ConstructorDeclaration"]()
                     cdec.jname = [body_cd.name]
-                    cd.body.append(cdec)
                     # create statement instances
                     for statement in body_cd:
                         if type(statement) is javalang.tree.Statement:
                             statement_name = type(statement).__name__
                             statement_instance = onto[statement_name]()
                             cdec.body.append(statement_instance)
+                    cd.body.append(cdec)
                 elif type(body_cd) is javalang.tree.FieldDeclaration:
-                    fd = onto["FieldDeclaration"]()
-                    fd.jname = [body_cd.name]
-                    cd.body.append(fd)
+                    for f in body_cd.declarators:
+                        fd = onto["FieldDeclaration"]()
+                        fd.jname = [f.name]
+                        cd.body.append(fd)
             """
                 For each class member (MethodDeclaration/FieldDeclaration/ConstructorDeclaration) in the
                 "body" of a ClassDeclaration create a MethodDeclaration/FieldDeclaration/ConstructorDeclaration
