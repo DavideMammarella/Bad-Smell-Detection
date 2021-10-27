@@ -37,6 +37,8 @@ def populateOntology(onto, tree):
                         fd = onto["FieldDeclaration"]()
                         fd.jname = [f.name]
                         cd.body.append(fd)
+
+            #print(cd)
             """
                 For each class member (MethodDeclaration/FieldDeclaration/ConstructorDeclaration) in the
                 "body" of a ClassDeclaration create a MethodDeclaration/FieldDeclaration/ConstructorDeclaration
@@ -63,12 +65,20 @@ def main():
                 onto.save(file="tree2.owl", format="rdfxml")  # save the ontology
 
 
+def onto():
+    onto = get_ontology("tree.owl").load()
+    yield onto
+    for e in onto['ClassDeclaration'].instances():
+        destroy_entity(e)
+
+
 def test_ontology():
     onto = get_ontology("tree.owl").load()
     tree = javalang.parse.parse("class A { int x, y; }")
     populateOntology(onto, tree)
     a = onto['ClassDeclaration'].instances()[0]
     assert a.body[0].is_a[0].name == 'FieldDeclaration'
+    #print(a.body[0].jname[0])
     assert a.body[0].jname[0] == 'x'
     assert a.body[1].is_a[0].name == 'FieldDeclaration'
     assert a.body[1].jname[0] == 'y'
@@ -76,4 +86,5 @@ def test_ontology():
 
 if __name__ == "__main__":
     main()
+    onto()
     test_ontology()
