@@ -16,26 +16,38 @@ def populateOntology(onto, tree):
                     md = onto["MethodDeclaration"]()
                     md.jname = [body_cd.name]
                     cd.body.append(md)
-                    # create statement instances (first element is the path!)
+                    # create statement instances (first element is the method declaration!)
                     for _, statement in body_cd:
                         if type(statement) is javalang.tree.Statement:
                             statement_name = type(statement).__name__
                             statement_instance = onto[statement_name]()
                             md.body.append(statement_instance)
+                    # create parameter instances
+                    for parameter in body_cd.parameters:
+                            parameter_name = type(parameter).__name__
+                            parameter_instance = onto[parameter_name]()
+                            md.parameters.append(parameter_instance)
                 elif type(body_cd) is javalang.tree.ConstructorDeclaration:
                     cdec = onto["ConstructorDeclaration"]()
                     cdec.jname = [body_cd.name]
                     cd.body.append(cdec)
-                    # create statement instances (first element is the path!)
+                    # create statement instances (first element is the constructor declaration!)
                     for _, statement in body_cd:
+                        #print(_)
+                        #print(statement)
                         if type(statement) is javalang.tree.Statement:
                             statement_name = type(statement).__name__
                             statement_instance = onto[statement_name]()
                             cdec.body.append(statement_instance)
+                    # create parameter instances
+                    for parameter in body_cd.parameters:
+                        parameter_name = type(parameter).__name__
+                        parameter_instance = onto[parameter_name]()
+                        cdec.parameters.append(parameter_instance)
                 elif type(body_cd) is javalang.tree.FieldDeclaration:
-                    for f in body_cd.declarators:
+                    for field in body_cd.declarators:
                         fd = onto["FieldDeclaration"]()
-                        fd.jname = [f.name]
+                        fd.jname = [field.name]
                         cd.body.append(fd)
             """
                 For each class member (MethodDeclaration/FieldDeclaration/ConstructorDeclaration) in the
@@ -45,6 +57,10 @@ def populateOntology(onto, tree):
                 For each Statement (IfStatement, WhileStatement, etc.) reachable from the body of a
                 MethodDeclaration or ConstructorDeclaration, create a Statement instance  and add (append) 
                 the Statement instances to the property "body" of the MethodDeclaration or ConstructorDeclaration
+                
+                For each parameter in the parameter list of a MethodDeclaration or ConstructorDeclaration, 
+                create an instance of class FormalParameter and add (append) the FormalParameter instances 
+                to the property "parameters" of the MethodDeclaration or ConstructorDeclaration
             """
 
 
@@ -66,13 +82,10 @@ def main():
 def test_ontology():
     world = World()
     onto = world.get_ontology("tree.owl").load()
-    tree = javalang.parse.parse("class A { int x, y; }")
+    tree = javalang.parse.parse("class A { int f() { return 0; } }")
     populateOntology(onto, tree)
     a = onto['ClassDeclaration'].instances()[0]
-    assert a.body[0].is_a[0].name == 'FieldDeclaration'
-    assert a.body[0].jname[0] == 'x'
-    assert a.body[1].is_a[0].name == 'FieldDeclaration'
-    assert a.body[1].jname[0] == 'y'
+    assert a.body[0].body[0].is_a[0].name == 'ReturnStatement'
 
 
 if __name__ == "__main__":
