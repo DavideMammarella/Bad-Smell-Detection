@@ -15,30 +15,28 @@ def populateOntology(onto, tree):
                 if type(body_cd) is javalang.tree.MethodDeclaration:
                     md = onto["MethodDeclaration"]()
                     md.jname = [body_cd.name]
-                    # create statement instances
-                    for statement in body_cd:
+                    cd.body.append(md)
+                    # create statement instances (first element is the path!)
+                    for _, statement in body_cd:
                         if type(statement) is javalang.tree.Statement:
                             statement_name = type(statement).__name__
                             statement_instance = onto[statement_name]()
-                            cd.body.append(statement_instance)
-                    cd.body.append(md)
+                            md.body.append(statement_instance)
                 elif type(body_cd) is javalang.tree.ConstructorDeclaration:
                     cdec = onto["ConstructorDeclaration"]()
                     cdec.jname = [body_cd.name]
-                    # create statement instances
-                    for statement in body_cd:
+                    cd.body.append(cdec)
+                    # create statement instances (first element is the path!)
+                    for _, statement in body_cd:
                         if type(statement) is javalang.tree.Statement:
                             statement_name = type(statement).__name__
                             statement_instance = onto[statement_name]()
                             cdec.body.append(statement_instance)
-                    cd.body.append(cdec)
                 elif type(body_cd) is javalang.tree.FieldDeclaration:
                     for f in body_cd.declarators:
                         fd = onto["FieldDeclaration"]()
                         fd.jname = [f.name]
                         cd.body.append(fd)
-
-            #print(cd)
             """
                 For each class member (MethodDeclaration/FieldDeclaration/ConstructorDeclaration) in the
                 "body" of a ClassDeclaration create a MethodDeclaration/FieldDeclaration/ConstructorDeclaration
@@ -65,20 +63,13 @@ def main():
                 onto.save(file="tree2.owl", format="rdfxml")  # save the ontology
 
 
-def onto():
-    onto = get_ontology("tree.owl").load()
-    yield onto
-    for e in onto['ClassDeclaration'].instances():
-        destroy_entity(e)
-
-
 def test_ontology():
-    onto = get_ontology("tree.owl").load()
+    world = World()
+    onto = world.get_ontology("tree.owl").load()
     tree = javalang.parse.parse("class A { int x, y; }")
     populateOntology(onto, tree)
     a = onto['ClassDeclaration'].instances()[0]
     assert a.body[0].is_a[0].name == 'FieldDeclaration'
-    #print(a.body[0].jname[0])
     assert a.body[0].jname[0] == 'x'
     assert a.body[1].is_a[0].name == 'FieldDeclaration'
     assert a.body[1].jname[0] == 'y'
@@ -86,5 +77,4 @@ def test_ontology():
 
 if __name__ == "__main__":
     main()
-    onto()
-    test_ontology()
+    #test_ontology()
