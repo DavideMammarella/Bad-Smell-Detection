@@ -8,7 +8,7 @@ def main():
 
     print(len(g)) #we have 1751 lines
 
-    q = sq.prepareQuery(
+    q1 = sq.prepareQuery(
         """SELECT ?mn ?cn (COUNT(*) AS ?tot) WHERE {
                 ?c a tree:ClassDeclaration .
                 ?c tree:jname ?cn .
@@ -16,12 +16,10 @@ def main():
                 ?m a tree:MethodDeclaration .
                 ?m tree:jname ?mn .
             } GROUP BY ?m""",
-        initNs={"tree": "http://my.onto.org/tree.owl#"})
+        initNs={"tree": "http://test.org/onto.owl#"})
 
-    qres = g.query(q)
-    for row in qres:
-        print(row)
-
+    for row in g.query(q1):
+        print(row.cn, "::", row.mn, "::", int(row.tot))
 
 if __name__ == "__main__":
     main()
