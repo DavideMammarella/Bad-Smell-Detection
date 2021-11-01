@@ -4,7 +4,8 @@ import rdflib.plugins.sparql as sq
 
 def writeLog(title, query_result):
     with open("log.txt", "a+") as file_object:
-        file_object.write("\n"+title+"\n")
+        file_object.write(title+"\n")
+        count = 0
         for row in query_result:
             file_object.write(row.cn)
             file_object.write("::")
@@ -12,7 +13,9 @@ def writeLog(title, query_result):
             file_object.write("::")
             file_object.write(str(int(row.tot)))
             file_object.write("\n")
-
+            count=count+1
+        file_object.write("-----------------------\n")
+        file_object.write("Total Results: "+str(count)+"\n\n")
 
 def testQuery(g):
     q = sq.prepareQuery(
