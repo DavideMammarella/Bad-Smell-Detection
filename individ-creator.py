@@ -64,7 +64,7 @@ def main():
     onto = get_ontology("tree.owl").load()  # load the ontology created in step 1 (onto-creator.py)
 
     # multiple javafile processing (stackoverflow.com/questions/58108964/how-to-open-multiple-files-in-loop-in-python)
-    folderpath = r"input/android-chess/app/src/main/java/jwtc/chess"  # make sure to put the 'r' in front
+    folderpath = r"android-chess/app/src/main/java/jwtc/chess"  # make sure to put the 'r' in front
     filepaths = [os.path.join(folderpath, name) for name in os.listdir(folderpath)]
     for path in filepaths:
         if isfile(path):
@@ -80,10 +80,11 @@ def test_ontology():
     onto = world.get_ontology("tree.owl").load()
     tree = javalang.parse.parse("class A { int f() { return 0; } }")
     populateOntology(onto, tree)
-    a = onto['ClassDeclaration'].instances()[0]
-    assert a.body[0].body[0].is_a[0].name == 'ReturnStatement'
+    a = onto["ClassDeclaration"].instances()[0]
+    #print(a.body[0].body[0].is_a[0].name) TODO: it returns MethodDeclaration instead of ReturnStatement
+    assert a.body[0].body[0].is_a[0].name == "ReturnStatement"
 
 
 if __name__ == "__main__":
     main()
-    # test_ontology()
+    test_ontology()

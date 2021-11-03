@@ -48,7 +48,7 @@ class AstVisitor(ast.NodeVisitor):
 
 
 def main():
-    pyfile = open("input/tree.py")  # get tree.py as input file
+    pyfile = open("tree.py")  # get tree.py as input file
 
     try:
         ast_of_pyfile = ast.parse(pyfile.read())  # get the AST of input file
