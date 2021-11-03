@@ -87,4 +87,4 @@ def test_ontology():
 
 if __name__ == "__main__":
     main()
-    test_ontology()
+    #test_ontology()
