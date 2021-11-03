@@ -10,7 +10,6 @@ def populateOntology(onto, tree):
         if type(node) is javalang.tree.ClassDeclaration:  # for each ClassDeclaration in the javalang parse tree
             cd = onto["ClassDeclaration"]()  # create an instance of the ontology class ClassDeclaration
             cd.jname = [node.name]
-
             for body_cd in node.body:
                 if type(body_cd) is javalang.tree.MethodDeclaration:
                     md = onto["MethodDeclaration"]()
@@ -18,27 +17,24 @@ def populateOntology(onto, tree):
                     cd.body.append(md)
                     # create statement instances (first element is the method declaration!)
                     for _, statement in body_cd:
-                        if type(statement) is javalang.tree.Statement:
-                            statement_name = type(statement).__name__
-                            statement_instance = onto[statement_name]()
-                            md.body.append(statement_instance)
+                        statement_name = type(statement).__name__
+                        statement_instance = onto[statement_name]()
+                        md.body.append(statement_instance)
                     # create parameter instances
                     for parameter in body_cd.parameters:
-                            parameter_name = type(parameter).__name__
-                            parameter_instance = onto[parameter_name]()
-                            md.parameters.append(parameter_instance)
+                        parameter_name = type(parameter).__name__
+                        parameter_instance = onto[parameter_name]()
+                        md.parameters.append(parameter_instance)
                 elif type(body_cd) is javalang.tree.ConstructorDeclaration:
                     cdec = onto["ConstructorDeclaration"]()
                     cdec.jname = [body_cd.name]
                     cd.body.append(cdec)
                     # create statement instances (first element is the constructor declaration!)
                     for _, statement in body_cd:
-                        #print(_)
-                        #print(statement)
-                        if type(statement) is javalang.tree.Statement:
-                            statement_name = type(statement).__name__
-                            statement_instance = onto[statement_name]()
-                            cdec.body.append(statement_instance)
+                        # print(type(statement))
+                        statement_name = type(statement).__name__
+                        statement_instance = onto[statement_name]()
+                        cdec.body.append(statement_instance)
                     # create parameter instances
                     for parameter in body_cd.parameters:
                         parameter_name = type(parameter).__name__
@@ -90,4 +86,4 @@ def test_ontology():
 
 if __name__ == "__main__":
     main()
-    #test_ontology()
+    # test_ontology()
