@@ -258,3 +258,10 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+#android-chess
+android-chess
+
+#Additional Py
+.python-version
+.pytest_cache
