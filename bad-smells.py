@@ -95,6 +95,25 @@ def findLargeClasses(g):
     writeLog(title, query_result)
 
 # MethodWithSwitch: >= 1 switch statement in method/constructor body
+def findMethodsWithSwitch(g):
+    q = sq.prepareQuery(
+        """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
+                ?class a tree:ClassDeclaration .
+                ?class tree:jname ?cn .
+                ?class tree:body ?method .
+                ?method a tree:MethodDeclaration .
+                ?method tree:jname ?mn .
+                ?method tree:body ?statement
+                ?statement a tree:SwitchStatement .
+            } GROUP BY ?mn
+            HAVING (COUNT(?statement) >= 1)
+        """,
+        initNs={"tree": "http://test.org/onto.owl#"})
+
+    query_result = g.query(q)
+    title = "Methods with Switch Query Results:"
+    writeLog(title, query_result)
+
 # ConstructorWithSwitch: >= 1 switch statement in method/constructor body
 # MethodWithLongParameterList: >= 5 parameters
 # ConstructorWithLongParameterList: >= 5 parameters
@@ -122,6 +141,7 @@ def main():
     findLongMethods(g)
     findLongConstructors(g)
     findLargeClasses(g)
+    findMethodsWithSwitch(g)
 
 
 if __name__ == "__main__":
