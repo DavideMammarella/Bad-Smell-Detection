@@ -29,7 +29,8 @@ def writeLog(title, query_result):
                 file_object.write(str(int(row.tot)))
                 file_object.write(" \\\\\n")
                 count = count + 1
-            file_object.write("\\hline\n\\end{tabular}\n\\caption{" + title + ".}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}\n\n\n\n")
+            file_object.write(
+                "\\hline\n\\end{tabular}\n\\caption{" + title + ".}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}\n\n\n\n")
             bad_smells.append(title + " & " + str(count) + " \\\\\n")
         else:
             bad_smells.append(title + " & 0 \\\\\n")

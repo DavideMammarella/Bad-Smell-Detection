@@ -59,14 +59,5 @@ def main():
         pyfile.close()
 
 
-def test_ontology():
-    onto = get_ontology("tree.owl").load()
-    cd = onto["ClassDeclaration"]
-    assert cd.name == "ClassDeclaration"
-    assert len(cd.is_a) == 1
-    assert cd.is_a[0].name == "TypeDeclaration"
-
-
 if __name__ == "__main__":
     main()
-    test_ontology()

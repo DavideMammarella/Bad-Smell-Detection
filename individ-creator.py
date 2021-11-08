@@ -75,16 +75,5 @@ def main():
                 onto.save(file="tree2.owl", format="rdfxml")  # save the ontology
 
 
-def test_ontology():
-    world = World()
-    onto = world.get_ontology("tree.owl").load()
-    tree = javalang.parse.parse("class A { int f() { return 0; } }")
-    populateOntology(onto, tree)
-    a = onto["ClassDeclaration"].instances()[0]
-    #print(a.body[0].body[0].is_a[0].name) TODO: it returns MethodDeclaration instead of ReturnStatement
-    assert a.body[0].body[0].is_a[0].name == "ReturnStatement"
-
-
 if __name__ == "__main__":
     main()
-    #test_ontology()
