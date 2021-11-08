@@ -153,6 +153,24 @@ def findMethodsWithLongParameterList(g):
     writeLog(title, query_result)
 
 # ConstructorWithLongParameterList: >= 5 parameters
+def findConstructorsWithLongParameterList(g):
+    q = sq.prepareQuery(
+        """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
+                ?class a tree:ClassDeclaration .
+                ?class tree:jname ?cn .
+                ?class tree:body ?cdec .
+                ?cdec a tree:ConstructorDeclaration .
+                ?cdec tree:jname ?cname .
+                ?cdec tree:parameters ?parameter 
+            } GROUP BY ?cdec
+            HAVING (COUNT(?parameter) >= 5)
+        """,
+        initNs={"tree": "http://test.org/onto.owl#"})
+
+    query_result = g.query(q)
+    title = "Constructors with Long Parameter List - Query Results:"
+    writeLog(title, query_result)
+
 # DataClass: class with only setters and getters
 
 
@@ -180,6 +198,7 @@ def main():
     findMethodsWithSwitch(g)
     findConstructorsWithSwitch(g)
     findMethodsWithLongParameterList(g)
+    findConstructorsWithLongParameterList(g)
 
 
 if __name__ == "__main__":
