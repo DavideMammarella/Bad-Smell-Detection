@@ -4,22 +4,22 @@ import rdflib.plugins.sparql as sq
 from owlready2 import *
 import importlib
 
-# Global variables used only for Latex output purpose
-tab_number = 0
-bad_smells = []
 
 def writeLogBadSmells(bad_smells):
     with open("log.txt", "a+") as file_object:
-        file_object.write("\n\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\nBad Smell & Count\\\\\n\\hline\n")
+        file_object.write(
+            "\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\nBad Smell & Count\\\\\n\\hline\n")
         for row in bad_smells:
             file_object.write(row)
-        file_object.write("\\hline\n\\end{tabular}\n\\caption{Bad smells (Total).}\n\\label{table:badSmellTable}\n\\end{table}\n")
+        file_object.write(
+            "\\hline\n\\end{tabular}\n\\caption{Bad smells (Total).}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}")
 
-def writeLog(title, query_result, tab_number):
+
+def writeLog(title, query_result):
     with open("log.txt", "a+") as file_object:
         if len(query_result):
-            file_object.write("\n\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\nClass Name & Method Name & Number Of Instances\\\\\n\\hline\n")
-            tab_number = tab_number + 1
+            file_object.write(
+                "\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\nClass Name & Method Name & Number Of Instances\\\\\n\\hline\n")
             count = 0
             for row in query_result:
                 file_object.write(row.cn)
@@ -29,8 +29,8 @@ def writeLog(title, query_result, tab_number):
                 file_object.write(str(int(row.tot)))
                 file_object.write(" \\\\\n")
                 count = count + 1
-            file_object.write("\\hline\n\\end{tabular}\n\\caption{"+title+".}\n\\label{table:tab"+str(tab_number)+"}\n\\end{table}\n\n\n")
-            bad_smells.append(title+" & "+str(count)+" \\\\\n")
+            file_object.write("\\hline\n\\end{tabular}\n\\caption{" + title + ".}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}\n\n\n\n")
+            bad_smells.append(title + " & " + str(count) + " \\\\\n")
         else:
             bad_smells.append(title + " & 0 \\\\\n")
 
@@ -48,7 +48,8 @@ def testQuery(g):
 
     query_result = g.query(q)
     title = "Test:"
-    writeLog(title, query_result, 0)
+    writeLog(title, query_result)
+
 
 # Long Methods: >= 20 statements
 def findLongMethods(g):
@@ -67,7 +68,8 @@ def findLongMethods(g):
 
     query_result = g.query(q)
     title = "Long Methods"
-    writeLog(title, query_result, 1)
+    writeLog(title, query_result)
+
 
 # Long Constructor: >= 20 statements
 def findLongConstructors(g):
@@ -86,7 +88,8 @@ def findLongConstructors(g):
 
     query_result = g.query(q)
     title = "Long Constructors"
-    writeLog(title, query_result, 2)
+    writeLog(title, query_result)
+
 
 # LargeClass: >= 10 methods
 def findLargeClasses(g):
@@ -103,7 +106,8 @@ def findLargeClasses(g):
 
     query_result = g.query(q)
     title = "Large Classes"
-    writeLog(title, query_result, 3)
+    writeLog(title, query_result)
+
 
 # MethodWithSwitch: >= 1 switch statement in method/constructor body
 def findMethodsWithSwitch(g):
@@ -123,7 +127,8 @@ def findMethodsWithSwitch(g):
 
     query_result = g.query(q)
     title = "Methods with Switch"
-    writeLog(title, query_result, 4)
+    writeLog(title, query_result)
+
 
 # ConstructorWithSwitch: >= 1 switch statement in method/constructor body
 def findConstructorsWithSwitch(g):
@@ -143,7 +148,8 @@ def findConstructorsWithSwitch(g):
 
     query_result = g.query(q)
     title = "Constructors with Switch"
-    writeLog(title, query_result, 5)
+    writeLog(title, query_result)
+
 
 # MethodWithLongParameterList: >= 5 parameters
 def findMethodsWithLongParameterList(g):
@@ -162,7 +168,8 @@ def findMethodsWithLongParameterList(g):
 
     query_result = g.query(q)
     title = "Methods with Long Parameter List"
-    writeLog(title, query_result, 6)
+    writeLog(title, query_result)
+
 
 # ConstructorWithLongParameterList: >= 5 parameters
 def findConstructorsWithLongParameterList(g):
@@ -181,7 +188,8 @@ def findConstructorsWithLongParameterList(g):
 
     query_result = g.query(q)
     title = "Constructors with Long Parameter List"
-    writeLog(title, query_result, 7)
+    writeLog(title, query_result)
+
 
 # DataClass: class with only setters and getters
 def findDataClasses(g):
@@ -202,7 +210,7 @@ def findDataClasses(g):
 
     query_result = g.query(q)
     title = "Classes with only Setters and Getters"
-    writeLog(title, query_result, 8)
+    writeLog(title, query_result)
 
 
 def main():
@@ -223,4 +231,7 @@ def main():
 
 
 if __name__ == "__main__":
+    # Global variables used only for Latex output purpose
+    global bad_smells
+    bad_smells = []
     main()

@@ -1,6 +1,5 @@
 # USI Bad Smell Detection
 This is the first project of the [Knowledge Analysis & Management](https://search.usi.ch/en/courses/35263581/knowledge-analysis-management) college course. <br>
- DESCRIPTION COMING SOON
 
 ## How to run the code
 
@@ -14,13 +13,13 @@ it to a folder of your choice, alternatively you can download it directly
 from a terminal using the following commands:
 
 ```
-git clone https://github.com/DavideMammarella/USI-Bad-Smell-Detection.git
+git clone https://github.com/DavideMammarella/Bad-Smell-Detection.git
 ```
 
 ### Run
 Access the application folder:
 ```
-cd USI-Bad-Smell-Detection/
+cd Bad-Smell-Detection/
 ```
 "Run" the application:
 ```
