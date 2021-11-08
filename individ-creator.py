@@ -31,7 +31,6 @@ def populateOntology(onto, tree):
                     cd.body.append(cdec)
                     # create statement instances (first element is the constructor declaration!)
                     for _, statement in body_cd:
-                        # print(type(statement))
                         statement_name = type(statement).__name__
                         statement_instance = onto[statement_name]()
                         cdec.body.append(statement_instance)
@@ -64,15 +63,14 @@ def main():
     onto = get_ontology("tree.owl").load()  # load the ontology created in step 1 (onto-creator.py)
 
     # multiple javafile processing (stackoverflow.com/questions/58108964/how-to-open-multiple-files-in-loop-in-python)
-    folderpath = r"android-chess/app/src/main/java/jwtc/chess"  # make sure to put the 'r' in front
+    folderpath = r"android-chess/app/src/main/java/jwtc/chess"
     filepaths = [os.path.join(folderpath, name) for name in os.listdir(folderpath)]
     for path in filepaths:
         if isfile(path):
-            with open(path, 'r') as f:
-                javafile = f.read()  # get a java file of android-chess as input file
-                tree_of_javafile = javalang.parse.parse(javafile)  # get the TREE of input file
-                populateOntology(onto, tree_of_javafile)  # populate the ontology
-                onto.save(file="tree2.owl", format="rdfxml")  # save the ontology
+            with open(path, 'r') as javafile:
+                tree_of_javafile = javalang.parse.parse(javafile.read())  # get the TREE of input java file
+                populateOntology(onto, tree_of_javafile)
+                onto.save(file="tree2.owl", format="rdfxml")
 
 
 if __name__ == "__main__":

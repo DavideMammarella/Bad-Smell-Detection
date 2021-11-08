@@ -36,22 +36,6 @@ def writeLog(title, query_result):
             bad_smells.append(title + " & 0 \\\\\n")
 
 
-def testQuery(g):
-    q = sq.prepareQuery(
-        """SELECT ?mn ?cn (COUNT(*) AS ?tot) WHERE {
-                ?c a tree:ClassDeclaration .
-                ?c tree:jname ?cn .
-                ?c tree:body ?m .
-                ?m a tree:MethodDeclaration .
-                ?m tree:jname ?mn .
-            } GROUP BY ?m""",
-        initNs={"tree": "http://test.org/onto.owl#"})
-
-    query_result = g.query(q)
-    title = "Test:"
-    writeLog(title, query_result)
-
-
 # Long Methods: >= 20 statements
 def findLongMethods(g):
     q = sq.prepareQuery(
@@ -68,7 +52,7 @@ def findLongMethods(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Long Methods"
+    title = "Long methods"
     writeLog(title, query_result)
 
 
@@ -88,7 +72,7 @@ def findLongConstructors(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Long Constructors"
+    title = "Long constructors"
     writeLog(title, query_result)
 
 
@@ -106,7 +90,7 @@ def findLargeClasses(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Large Classes"
+    title = "Large classes"
     writeLog(title, query_result)
 
 
@@ -127,7 +111,7 @@ def findMethodsWithSwitch(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Methods with Switch"
+    title = "Methods with switch statements"
     writeLog(title, query_result)
 
 
@@ -148,7 +132,7 @@ def findConstructorsWithSwitch(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Constructors with Switch"
+    title = "Constructors with switch statements"
     writeLog(title, query_result)
 
 
@@ -168,7 +152,7 @@ def findMethodsWithLongParameterList(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Methods with Long Parameter List"
+    title = "Methods with long parameter list"
     writeLog(title, query_result)
 
 
@@ -188,7 +172,7 @@ def findConstructorsWithLongParameterList(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Constructors with Long Parameter List"
+    title = "Constructors with long parameter list"
     writeLog(title, query_result)
 
 
@@ -210,7 +194,7 @@ def findDataClasses(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Classes with only Setters and Getters"
+    title = "Data Classes"
     writeLog(title, query_result)
 
 

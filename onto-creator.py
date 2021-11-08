@@ -4,7 +4,6 @@ import ast
 
 onto = get_ontology("http://test.org/onto.owl")  # create an owlready2 ontology
 
-
 class AstVisitor(ast.NodeVisitor):
     """
         This class is a subclass of ast.NodeVisitor, with the purpose of adding
@@ -45,6 +44,7 @@ class AstVisitor(ast.NodeVisitor):
                                 All properties are assumed to be data properties, except for "body" and "parameters",
                                 which are ObjectProperties.
                         """
+
 
 
 def main():
