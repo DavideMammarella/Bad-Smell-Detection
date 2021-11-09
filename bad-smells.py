@@ -19,7 +19,7 @@ def writeLog(title, query_result):
     with open("log.txt", "a+") as file_object:
         if len(query_result):
             file_object.write(
-                "\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\nClass Name & Method Name & Number Of Instances\\\\\n\\hline\n")
+                "\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\nClass Name & Method Name & Number Of Occurrences\\\\\n\\hline\n")
             count = 0
             for row in query_result:
                 file_object.write(row.cn)
