@@ -6,8 +6,7 @@ import javalang  # https://github.com/c2nes/javalang
 
 
 def populateOntology(onto, tree):
-    for node in tree.types:
-        if type(node) is javalang.tree.ClassDeclaration:  # for each ClassDeclaration in the javalang parse tree
+    for _, node in tree.filter(javalang.tree.ClassDeclaration):  # for each ClassDeclaration in the javalang parse tree
             cd = onto["ClassDeclaration"]()  # create an instance of the ontology class ClassDeclaration
             cd.jname = [node.name]
             for body_cd in node.body:
