@@ -23,7 +23,7 @@ cd Bad-Smell-Detection/
 ```
 N.B. Check that the path to the project folder is correct
 
-###Run the application:
+### Run the application:
 #### Create the Ontology
 ```
 python3 onto-creator.py
