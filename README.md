@@ -41,4 +41,4 @@ All the files that will be generated as output will be available in the project 
 - Finally, execution of `Find Bad Smells` command will generate a file named `log.txt` that contains the bad smells metrics
 ### Access files
 - All ontologies, i.e. files with the extension `.owl`, can be opened with [Protegè](https://protege.stanford.edu) <br>
-- It is advisable to open the file with the `.txt` extension with a [Latex editor](https://www.overleaf.com/), as it contains the tables relating to Bad Smells in Latex format.
+- It is advisable to open the `log.txt` file with a [Latex editor](https://www.overleaf.com/), as it contains bad smell metrics tables in Latex format
