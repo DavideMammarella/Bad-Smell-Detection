@@ -1,9 +1,9 @@
 # Bad Smell Detection
-First project of [Knowledge Analysis & Management](https://search.usi.ch/en/courses/35263581/knowledge-analysis-management) college course. <br>
+First project of [Knowledge Analysis & Management](https://search.usi.ch/en/courses/35263581/knowledge-analysis-management) college course<br>
 
 ## Prerequisites
-`Python 3` must be installed on your machine. <br>
-The libraries needed for the program to work are: `AST` (included in Python), `Owlready 2`, `rdflib`
+- `Python 3` must be installed on your machine
+- The libraries needed for the program to work are: `AST` (included in Python), `Owlready 2`, `rdflib`
 
 ## Download
 You can download the compressed file from this page and extract 
