@@ -48,7 +48,8 @@ def findLongMethods(g):
                 ?method tree:body ?statement .
                 ?statement a/rdfs:subClassOf* tree:Statement .
             } GROUP BY ?method
-            HAVING (COUNT(?statement) >= 20)""",
+            HAVING (COUNT(?statement) >= 20)
+            ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
@@ -68,7 +69,8 @@ def findLongConstructors(g):
                 ?cdec tree:body ?statement .
                 ?statement a/rdfs:subClassOf* tree:Statement .
             } GROUP BY ?cdec
-            HAVING (COUNT(?statement) >= 20)""",
+            HAVING (COUNT(?statement) >= 20)
+            ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
@@ -86,7 +88,8 @@ def findLargeClasses(g):
                 ?method a tree:MethodDeclaration .
                 ?method tree:jname ?mn .
             } GROUP BY ?class
-            HAVING (COUNT(?method) >= 20)""",
+            HAVING (COUNT(?method) >= 20)
+            ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
@@ -107,7 +110,7 @@ def findMethodsWithSwitch(g):
                 ?statement a tree:SwitchStatement .
             } GROUP BY ?method
             HAVING (COUNT(?statement) >= 1)
-        """,
+            ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
@@ -128,7 +131,7 @@ def findConstructorsWithSwitch(g):
                 ?statement a tree:SwitchStatement .
             } GROUP BY ?cdec
             HAVING (COUNT(?statement) >= 1)
-        """,
+            ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
@@ -148,7 +151,7 @@ def findMethodsWithLongParameterList(g):
                 ?method tree:parameters ?parameter .
             } GROUP BY ?method
             HAVING (COUNT(?parameter) >= 5)
-        """,
+            ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
@@ -168,7 +171,7 @@ def findConstructorsWithLongParameterList(g):
                 ?cdec tree:parameters ?parameter 
             } GROUP BY ?cdec
             HAVING (COUNT(?parameter) >= 5)
-        """,
+            ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
@@ -190,7 +193,7 @@ def findDataClasses(g):
                     regex(?mn, "set.*")
                 )
             } GROUP BY ?class
-        """,
+            ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
