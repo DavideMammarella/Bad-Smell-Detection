@@ -23,12 +23,12 @@ class AstVisitor(ast.NodeVisitor):
         """
         with onto:
             for object in node.bases:
-                if (object.id == "Node"):
+                if object.id == "Node":
                     types.new_class(node.name, (Thing,))
                 else:
                     types.new_class(node.name, (onto[object.id],))
             for x in node.body:
-                if type(x) == ast.Assign:
+                if isinstance(x, ast.Assign):
                     for element in x.value.elts:
                         if element.s == "parameters":
                             types.new_class(element.s, (ObjectProperty,))

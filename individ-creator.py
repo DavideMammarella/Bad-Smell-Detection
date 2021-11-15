@@ -1,7 +1,8 @@
 from owlready2 import *
+import ast
 import os
 from os.path import isfile
-import javalang  # https://github.com/c2nes/javalang
+import javalang
 
 
 def createDeclaration(body_cd, class_declaration, body_declaration):
@@ -23,7 +24,7 @@ def createStatementsAndParameters(onto, body_cd, declaration):
     to the property "parameters" of the MethodDeclaration or ConstructorDeclaration.
     """
     for _, statement in body_cd:
-        if type(statement) is javalang.tree.Statement:
+        if isinstance(statement, javalang.tree.Statement):
             statement_name = type(statement).__name__
             statement_instance = onto[statement_name]()
             declaration.body.append(statement_instance)
@@ -43,15 +44,15 @@ def populateOntology(onto, tree):
         cd = onto["ClassDeclaration"]()
         cd.jname = [node.name]
         for body_cd in node.body:
-            if type(body_cd) is javalang.tree.MethodDeclaration:
+            if isinstance(body_cd, javalang.tree.MethodDeclaration):
                 md = onto["MethodDeclaration"]()
                 createDeclaration(body_cd, cd, md)
                 createStatementsAndParameters(onto, body_cd, md)
-            elif type(body_cd) is javalang.tree.ConstructorDeclaration:
+            elif isinstance(body_cd, javalang.tree.ConstructorDeclaration):
                 cdec = onto["ConstructorDeclaration"]()
                 createDeclaration(body_cd, cd, cdec)
                 createStatementsAndParameters(onto, body_cd, cdec)
-            elif type(body_cd) is javalang.tree.FieldDeclaration:
+            elif isinstance(body_cd, javalang.tree.FieldDeclaration):
                 for field in body_cd.declarators:
                     fd = onto["FieldDeclaration"]()
                     createDeclaration(field, cd, fd)
@@ -60,7 +61,7 @@ def populateOntology(onto, tree):
 def main():
     """
     Populate an ontology with instances:
-    - Get ontology from onto-creator as input
+    - Get ontology from onto-creator.py as input
     - Process every Java file in AndroidChess folder to create instances and populate the ontology
     """
     onto = get_ontology("tree.owl").load()
