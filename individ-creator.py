@@ -25,9 +25,10 @@ def createStatementsAndParameters(onto, body_cd, declaration):
     to the property "parameters" of the MethodDeclaration or ConstructorDeclaration
     """
     for _, statement in body_cd:
-        statement_name = type(statement).__name__
-        statement_instance = onto[statement_name]()
-        declaration.body.append(statement_instance)
+        if type(statement) is javalang.tree.Statement:
+            statement_name = type(statement).__name__
+            statement_instance = onto[statement_name]()
+            declaration.body.append(statement_instance)
     for parameter in body_cd.parameters:
         parameter_name = type(parameter).__name__
         parameter_instance = onto[parameter_name]()
