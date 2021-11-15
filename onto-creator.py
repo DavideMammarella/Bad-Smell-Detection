@@ -4,25 +4,32 @@ import ast
 
 onto = get_ontology("http://test.org/onto.owl")  # create an owlready2 ontology
 
+
 class AstVisitor(ast.NodeVisitor):
     """
-        This class is a subclass of ast.NodeVisitor, with the purpose of adding
-        custom visitor methods.
+    Subclass of ast.NodeVisitor, with the purpose of adding ClassDef visitor method.
     """
 
     def visit_ClassDef(self, node: ast.ClassDef):
-        for object in node.bases:  # for each ClassDef object:
-            with onto:
-                if (object.id == "Node"):
-                    types.new_class(node.name, (Thing,))  # superclass Node of tree.py becomes Thing in the ontology
-                else:
-                    types.new_class(node.name, (
-                        onto[object.id],))  # otherwise get the superclass from the ontology under construction(onto)
+        """
+        Create a new class in the ontology for each ClassDef object:
+        - superclass Node of tree.py becomes Thing in the ontology
+        - otherwise get the superclass from the ontology under construction(onto)
 
-        for x in node.body:  # given an expression x in body
-            with onto:
-                if type(x) == ast.Assign:  # check if type(x) is ast.Assign
-                    for element in x.value.elts:  # iterate over x.value.elts
+        During the visit of each ClassDef create a new property in the ontology for each Assign in the body:
+        - all properties are assumed to be data properties,
+        - except for "body" and "parameters", which are ObjectProperties.
+        Property "name" renamed to "jname" to avoid conflicts with the predefined "name" attribute.
+        """
+        with onto:
+            for object in node.bases:
+                if (object.id == "Node"):
+                    types.new_class(node.name, (Thing,))
+                else:
+                    types.new_class(node.name, (onto[object.id],))
+            for x in node.body:
+                if type(x) == ast.Assign:
+                    for element in x.value.elts:
                         if element.s == "parameters":
                             types.new_class(element.s, (ObjectProperty,))
                         elif element.s == "body":
@@ -31,32 +38,19 @@ class AstVisitor(ast.NodeVisitor):
                             types.new_class("jname", (DataProperty,))
                         else:
                             types.new_class(element.s, (DataProperty,))
-                        """
-                                Use attribute s of each element to get a string representation of the elements
-                                in the right hand side tuple of the assignment.
-                                
-                                Create a property for each of them:
-                                    new_class("property", (ObjectProperty,)) for object properties
-                                    new_class("property", (DataProperty,)) for datatype properties
-                                    
-                                Rename property "name" to "jname" to avoid conflicts with the predefined "name" attribute
-                                
-                                All properties are assumed to be data properties, except for "body" and "parameters",
-                                which are ObjectProperties.
-                        """
-
 
 
 def main():
-    pyfile = open("tree.py")  # get tree.py as input file
-
-    try:
-        ast_of_pyfile = ast.parse(pyfile.read())  # get the AST of input file
-        AstVisitor().visit(ast_of_pyfile)  # visit the AST
-        onto.save(file="tree.owl", format="rdfxml")  # save the ontology
-
-    finally:
-        pyfile.close()
+    """
+    Create an ontology for Java entities:
+    - Get tree.py as input file
+    - Obtain AST from the input file
+    - Visit the AST and save the ontology
+    """
+    with open("tree.py") as py_file:
+        ast_of_py_file = ast.parse(py_file.read())
+        AstVisitor().visit(ast_of_py_file)
+        onto.save(file="tree.owl", format="rdfxml")
 
 
 if __name__ == "__main__":
