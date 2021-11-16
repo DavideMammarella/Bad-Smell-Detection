@@ -2,7 +2,7 @@ from owlready2 import *
 import types
 import ast
 
-onto = get_ontology("http://test.org/onto.owl")  # create an owlready2 ontology
+onto = get_ontology("http://test.org/onto.owl")
 
 
 class AstVisitor(ast.NodeVisitor):

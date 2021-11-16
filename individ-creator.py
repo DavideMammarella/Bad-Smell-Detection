@@ -4,7 +4,7 @@ from os.path import isfile
 import javalang
 
 
-def createDeclaration(body_cd, class_declaration, body_declaration):
+def createDeclarationBody(body_cd, class_declaration, body_declaration):
     """
     Append the member instance to the property "body" of the ClassDeclaration instance.
     """
@@ -45,16 +45,16 @@ def populateOntology(onto, tree):
         for body_cd in node.body:
             if isinstance(body_cd, javalang.tree.MethodDeclaration):
                 md = onto["MethodDeclaration"]()
-                createDeclaration(body_cd, cd, md)
+                createDeclarationBody(body_cd, cd, md)
                 createStatementsAndParameters(onto, body_cd, md)
             elif isinstance(body_cd, javalang.tree.ConstructorDeclaration):
                 cdec = onto["ConstructorDeclaration"]()
-                createDeclaration(body_cd, cd, cdec)
+                createDeclarationBody(body_cd, cd, cdec)
                 createStatementsAndParameters(onto, body_cd, cdec)
             elif isinstance(body_cd, javalang.tree.FieldDeclaration):
                 for field in body_cd.declarators:
                     fd = onto["FieldDeclaration"]()
-                    createDeclaration(field, cd, fd)
+                    createDeclarationBody(field, cd, fd)
 
 
 def main():
