@@ -4,15 +4,7 @@ from os.path import isfile
 import javalang
 
 
-def createDeclarationBody(body_cd, class_declaration, body_declaration):
-    """
-    Append the member instance to the property "body" of the ClassDeclaration instance.
-    """
-    body_declaration.jname = [body_cd.name]
-    class_declaration.body.append(body_declaration)
-
-
-def createStatementsAndParameters(onto, body_cd, declaration):
+def create_statements_and_parameters(onto, body_cd, declaration):
     """
     For each Statement (IfStatement, WhileStatement, etc.) reachable from the body of a
     MethodDeclaration or ConstructorDeclaration, create a Statement instance  and add (append)
@@ -33,7 +25,16 @@ def createStatementsAndParameters(onto, body_cd, declaration):
         declaration.parameters.append(parameter_instance)
 
 
-def populateOntology(onto, tree):
+def create_class_member(body_cd, class_declaration, body_declaration):
+    """
+    Give a jname to a class member (MethodDeclaration/FieldDeclaration/ConstructorDeclaration) instance.
+    Append the class member instance to the property "body" of a ClassDeclaration instance.
+    """
+    body_declaration.jname = [body_cd.name]
+    class_declaration.body.append(body_declaration)
+
+
+def populate_ontology(onto, tree):
     """
     For each ClassDeclaration create an instance of the ontology class (ClassDeclaration).
     For each class member (MethodDeclaration/FieldDeclaration/ConstructorDeclaration) in the "body"
@@ -45,16 +46,16 @@ def populateOntology(onto, tree):
         for body_cd in node.body:
             if isinstance(body_cd, javalang.tree.MethodDeclaration):
                 md = onto["MethodDeclaration"]()
-                createDeclarationBody(body_cd, cd, md)
-                createStatementsAndParameters(onto, body_cd, md)
+                create_class_member(body_cd, cd, md)
+                create_statements_and_parameters(onto, body_cd, md)
             elif isinstance(body_cd, javalang.tree.ConstructorDeclaration):
                 cdec = onto["ConstructorDeclaration"]()
-                createDeclarationBody(body_cd, cd, cdec)
-                createStatementsAndParameters(onto, body_cd, cdec)
+                create_class_member(body_cd, cd, cdec)
+                create_statements_and_parameters(onto, body_cd, cdec)
             elif isinstance(body_cd, javalang.tree.FieldDeclaration):
                 for field in body_cd.declarators:
                     fd = onto["FieldDeclaration"]()
-                    createDeclarationBody(field, cd, fd)
+                    create_class_member(field, cd, fd)
 
 
 def main():
@@ -70,7 +71,7 @@ def main():
         if isfile(path):
             with open(path, 'r') as java_file:
                 tree_of_java_file = javalang.parse.parse(java_file.read())
-                populateOntology(onto, tree_of_java_file)
+                populate_ontology(onto, tree_of_java_file)
                 onto.save(file="tree2.owl", format="rdfxml")
 
 

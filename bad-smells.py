@@ -2,9 +2,9 @@ import rdflib
 import rdflib.plugins.sparql as sq
 
 
-def writeLogDataClassesAndBadSmells(getset_classes_query_result, all_classes_query_result):
+def write_log_data_classes_and_bad_smells(getset_classes_query_result, all_classes_query_result):
     """
-    Check if the number of filtered/unfiltered methods obtained from "findDataClasses" are the same
+    Check if the number of filtered/unfiltered methods obtained from "find_data_classes" are the same
     and write the data classes in latex table format.
     Write all bad smells in latex table format.
     """
@@ -35,7 +35,7 @@ def writeLogDataClassesAndBadSmells(getset_classes_query_result, all_classes_que
                 "caption{Bad smells (Total).}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}")
 
 
-def writeLogQuery(title, query_result):
+def write_log_query(title, query_result):
     """
     Write the result of a query in latex table format.
     """
@@ -61,7 +61,7 @@ def writeLogQuery(title, query_result):
             bad_smells.append(title + " & 0 \\\\\n")
 
 
-def findLongMethods(g):
+def find_long_methods(g):
     """
     Query returning long methods.
     (i.e. Methods with >= 20 statements)
@@ -81,10 +81,10 @@ def findLongMethods(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    writeLogQuery("Long methods", query_result)
+    write_log_query("Long methods", query_result)
 
 
-def findLongConstructors(g):
+def find_long_constructors(g):
     """
     Query returning long constructors.
     (i.e. Constructor with >= 20 statements)
@@ -104,10 +104,10 @@ def findLongConstructors(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    writeLogQuery("Long constructors", query_result)
+    write_log_query("Long constructors", query_result)
 
 
-def findLargeClasses(g):
+def find_large_classes(g):
     """
     Query returning large classes.
     (i.e. Class with >= 10 methods)
@@ -125,10 +125,10 @@ def findLargeClasses(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    writeLogQuery("Large classes", query_result)
+    write_log_query("Large classes", query_result)
 
 
-def findMethodsWithSwitch(g):
+def find_methods_with_switch(g):
     """
     Query returning methods with switch.
     (i.e. Method with >= 1 switch statement in method/constructor body)
@@ -148,10 +148,10 @@ def findMethodsWithSwitch(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    writeLogQuery("Methods with switch statements", query_result)
+    write_log_query("Methods with switch statements", query_result)
 
 
-def findConstructorsWithSwitch(g):
+def find_constructors_with_switch(g):
     """
     Query returning constructor with switch.
     (i.e. Constructor with >= 1 switch statement in method/constructor body)
@@ -171,10 +171,10 @@ def findConstructorsWithSwitch(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    writeLogQuery("Constructors with switch statements", query_result)
+    write_log_query("Constructors with switch statements", query_result)
 
 
-def findMethodsWithLongParameterList(g):
+def find_methods_with_long_parameter_list(g):
     """
     Query returning methods with long parameter list.
     (i.e. Method with >= 5 parameters)
@@ -193,10 +193,10 @@ def findMethodsWithLongParameterList(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    writeLogQuery("Methods with long parameter list", query_result)
+    write_log_query("Methods with long parameter list", query_result)
 
 
-def findConstructorsWithLongParameterList(g):
+def find_constructors_with_long_parameter_list(g):
     """
     Query returning constructors with long parameter list.
     (i.e. Constructor with >= 5 parameters)
@@ -215,10 +215,10 @@ def findConstructorsWithLongParameterList(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    writeLogQuery("Constructors with long parameter list", query_result)
+    write_log_query("Constructors with long parameter list", query_result)
 
 
-def findDataClasses(g):
+def find_data_classes(g):
     """
     Query returning data classes.
     (i.e. Class with only setters and getters)
@@ -251,7 +251,7 @@ def findDataClasses(g):
 
     getset_classes_query_result = g.query(q1)
     all_classes_query_result = g.query(q2)
-    writeLogDataClassesAndBadSmells(getset_classes_query_result, all_classes_query_result)
+    write_log_data_classes_and_bad_smells(getset_classes_query_result, all_classes_query_result)
 
 
 def main():
@@ -267,14 +267,14 @@ def main():
 
     g = rdflib.Graph()
     g.load("tree2.owl")
-    findLongMethods(g)
-    findLongConstructors(g)
-    findLargeClasses(g)
-    findMethodsWithSwitch(g)
-    findConstructorsWithSwitch(g)
-    findMethodsWithLongParameterList(g)
-    findConstructorsWithLongParameterList(g)
-    findDataClasses(g)
+    find_long_methods(g)
+    find_long_constructors(g)
+    find_large_classes(g)
+    find_methods_with_switch(g)
+    find_constructors_with_switch(g)
+    find_methods_with_long_parameter_list(g)
+    find_constructors_with_long_parameter_list(g)
+    find_data_classes(g)
 
 
 if __name__ == "__main__":
