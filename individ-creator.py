@@ -1,5 +1,4 @@
 from owlready2 import *
-import ast
 import os
 from os.path import isfile
 import javalang
@@ -65,9 +64,9 @@ def main():
     - Process every Java file in AndroidChess folder to create instances and populate the ontology
     """
     onto = get_ontology("tree.owl").load()
-    folderpath = r"android-chess/app/src/main/java/jwtc/chess"
-    filepaths = [os.path.join(folderpath, name) for name in os.listdir(folderpath)]
-    for path in filepaths:
+    folder_path = r"android-chess/app/src/main/java/jwtc/chess"
+    file_paths = [os.path.join(folder_path, name) for name in os.listdir(folder_path)]
+    for path in file_paths:
         if isfile(path):
             with open(path, 'r') as java_file:
                 tree_of_java_file = javalang.parse.parse(java_file.read())

@@ -1,43 +1,71 @@
-import javalang
 import rdflib
 import rdflib.plugins.sparql as sq
-from owlready2 import *
-import importlib
 
 
-def writeLogBadSmells(bad_smells):
-    with open("log.txt", "a+") as file_object:
-        file_object.write(
-            "\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\nBad Smell & Count\\\\\n\\hline\n")
+def writeLogDataClassesAndBadSmells(getset_classes_query_result, all_classes_query_result):
+    """
+    Check if the number of filtered/unfiltered methods obtained from "findDataClasses" are the same
+    and write the data classes in latex table format.
+    Write all bad smells in latex table format.
+    """
+    global bad_smells
+    data_class_count = 0
+
+    with open("log.txt", "a+") as f:
+        f.write("\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\n"
+                "Class Name & Filtered Method & Unfiltered Method\\\\\n\\hline\n")
+        for normal_class in all_classes_query_result:
+            for data_class in getset_classes_query_result:
+                if (normal_class.mn == data_class.mn) and (normal_class.tot == data_class.tot):
+                    f.write(data_class.cn)
+                    f.write(" & ")
+                    f.write(str(int(data_class.tot)))
+                    f.write(" & ")
+                    f.write(str(int(normal_class.tot)))
+                    f.write(" \\\\\n")
+                    data_class_count = data_class_count + 1
+        bad_smells.append("Data Classes & " + str(int(data_class_count)) + " \\\\\n")
+        f.write("\\hline\n\\end{tabular}\n\\"
+                "caption{Data classes.}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}\n\n\n\n"
+                "\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\n"
+                "Bad Smell & Count\\\\\n\\hline\n")
         for row in bad_smells:
-            file_object.write(row)
-        file_object.write(
-            "\\hline\n\\end{tabular}\n\\caption{Bad smells (Total).}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}")
+            f.write(row)
+        f.write("\\hline\n\\end{tabular}\n\\"
+                "caption{Bad smells (Total).}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}")
 
 
-def writeLog(title, query_result):
-    with open("log.txt", "a+") as file_object:
+def writeLogQuery(title, query_result):
+    """
+    Write the result of a query in latex table format.
+    """
+    global bad_smells
+    count = 0
+
+    with open("log.txt", "a+") as f:
         if len(query_result):
-            file_object.write(
-                "\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\nClass Name & Method Name & Number Of Occurrences\\\\\n\\hline\n")
-            count = 0
+            f.write("\\begin{table}[H]\n\\centering \\scriptsize\n\\begin{tabular}{c c c}\n\\hline\n"
+                    "Class Name & Method Name & Number of Occurrences\\\\\n\\hline\n")
             for row in query_result:
-                file_object.write(row.cn)
-                file_object.write(" & ")
-                file_object.write(row.mn)
-                file_object.write(" & ")
-                file_object.write(str(int(row.tot)))
-                file_object.write(" \\\\\n")
+                f.write(row.cn)
+                f.write(" & ")
+                f.write(row.mn)
+                f.write(" & ")
+                f.write(str(int(row.tot)))
+                f.write(" \\\\\n")
                 count = count + 1
-            file_object.write(
-                "\\hline\n\\end{tabular}\n\\caption{" + title + ".}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}\n\n\n\n")
+            f.write("\\hline\n\\end{tabular}\n\\"
+                    "caption{" + title + ".}\n\\label{table:tab[EDIT TAB NUMBER]}\n\\end{table}\n\n\n\n")
             bad_smells.append(title + " & " + str(count) + " \\\\\n")
         else:
             bad_smells.append(title + " & 0 \\\\\n")
 
 
-# Long Methods: >= 20 statements
 def findLongMethods(g):
+    """
+    Query returning long methods.
+    (i.e. Methods with >= 20 statements)
+    """
     q = sq.prepareQuery(
         """SELECT ?mn ?cn (COUNT(*) AS ?tot) WHERE {
                 ?class a tree:ClassDeclaration .
@@ -53,12 +81,14 @@ def findLongMethods(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Long methods"
-    writeLog(title, query_result)
+    writeLogQuery("Long methods", query_result)
 
 
-# Long Constructor: >= 20 statements
 def findLongConstructors(g):
+    """
+    Query returning long constructors.
+    (i.e. Constructor with >= 20 statements)
+    """
     q = sq.prepareQuery(
         """SELECT ?cname ?cn (COUNT(*) AS ?tot) WHERE {
                 ?class a tree:ClassDeclaration .
@@ -74,12 +104,14 @@ def findLongConstructors(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Long constructors"
-    writeLog(title, query_result)
+    writeLogQuery("Long constructors", query_result)
 
 
-# LargeClass: >= 10 methods
 def findLargeClasses(g):
+    """
+    Query returning large classes.
+    (i.e. Class with >= 10 methods)
+    """
     q = sq.prepareQuery(
         """SELECT ?mn ?cn (COUNT(*) AS ?tot) WHERE {
                 ?class a tree:ClassDeclaration .
@@ -93,12 +125,14 @@ def findLargeClasses(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Large classes"
-    writeLog(title, query_result)
+    writeLogQuery("Large classes", query_result)
 
 
-# MethodWithSwitch: >= 1 switch statement in method/constructor body
 def findMethodsWithSwitch(g):
+    """
+    Query returning methods with switch.
+    (i.e. Method with >= 1 switch statement in method/constructor body)
+    """
     q = sq.prepareQuery(
         """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
                 ?class a tree:ClassDeclaration .
@@ -114,12 +148,14 @@ def findMethodsWithSwitch(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Methods with switch statements"
-    writeLog(title, query_result)
+    writeLogQuery("Methods with switch statements", query_result)
 
 
-# ConstructorWithSwitch: >= 1 switch statement in method/constructor body
 def findConstructorsWithSwitch(g):
+    """
+    Query returning constructor with switch.
+    (i.e. Constructor with >= 1 switch statement in method/constructor body)
+    """
     q = sq.prepareQuery(
         """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
                 ?class a tree:ClassDeclaration .
@@ -135,12 +171,14 @@ def findConstructorsWithSwitch(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Constructors with switch statements"
-    writeLog(title, query_result)
+    writeLogQuery("Constructors with switch statements", query_result)
 
 
-# MethodWithLongParameterList: >= 5 parameters
 def findMethodsWithLongParameterList(g):
+    """
+    Query returning methods with long parameter list.
+    (i.e. Method with >= 5 parameters)
+    """
     q = sq.prepareQuery(
         """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
                 ?class a tree:ClassDeclaration .
@@ -155,12 +193,14 @@ def findMethodsWithLongParameterList(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Methods with long parameter list"
-    writeLog(title, query_result)
+    writeLogQuery("Methods with long parameter list", query_result)
 
 
-# ConstructorWithLongParameterList: >= 5 parameters
 def findConstructorsWithLongParameterList(g):
+    """
+    Query returning constructors with long parameter list.
+    (i.e. Constructor with >= 5 parameters)
+    """
     q = sq.prepareQuery(
         """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
                 ?class a tree:ClassDeclaration .
@@ -175,37 +215,58 @@ def findConstructorsWithLongParameterList(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    title = "Constructors with long parameter list"
-    writeLog(title, query_result)
+    writeLogQuery("Constructors with long parameter list", query_result)
 
 
-# DataClass: class with only setters and getters
 def findDataClasses(g):
-    q = sq.prepareQuery(
-        """SELECT ?mn ?cn (COUNT(*)AS ?tot) WHERE {
+    """
+    Query returning data classes.
+    (i.e. Class with only setters and getters)
+
+    Two queries are needed to check if the filtered/unfiltered number of methods is the same:
+    - q1: retrieve only class with get or set methods.
+    - q2: retrieve every class with every methods in the class.
+    """
+    q1 = sq.prepareQuery(
+        """SELECT ?mn ?cn (COUNT(?method)AS ?tot) WHERE {
                 ?class a tree:ClassDeclaration .
                 ?class tree:jname ?cn .
                 ?class tree:body ?method .
                 ?method a tree:MethodDeclaration .
                 ?method tree:jname ?mn .
                 FILTER(
-                    regex(?mn, "get.*") ||
-                    regex(?mn, "set.*")
+                    regex(?mn, "get.*") || regex(?mn, "set.*")
                 )
-            } GROUP BY ?class
-            ORDER BY DESC(COUNT(*))""",
+            } GROUP BY ?class""",
+        initNs={"tree": "http://test.org/onto.owl#"})
+    q2 = sq.prepareQuery(
+        """SELECT ?mn ?cn (COUNT(?method)AS ?tot) WHERE {
+                ?class a tree:ClassDeclaration .
+                ?class tree:jname ?cn .
+                ?class tree:body ?method .
+                ?method a tree:MethodDeclaration .
+                ?method tree:jname ?mn .
+            } GROUP BY ?class""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
-    query_result = g.query(q)
-    title = "Data Classes"
-    writeLog(title, query_result)
+    getset_classes_query_result = g.query(q1)
+    all_classes_query_result = g.query(q2)
+    writeLogDataClassesAndBadSmells(getset_classes_query_result, all_classes_query_result)
 
 
 def main():
+    """
+    Encode bad smells as SPARQL queries:
+    - Get ontology from individ-creator.py as input
+    - Construct an rdflib Graph from the ontology
+    - Query the Graph
+    """
+    open("log.txt", "w").close()
+    global bad_smells
+    bad_smells = []
+
     g = rdflib.Graph()
     g.load("tree2.owl")
-    open("log.txt", "w").close()  # erase the log on every start
-    # queries
     findLongMethods(g)
     findLongConstructors(g)
     findLargeClasses(g)
@@ -214,12 +275,7 @@ def main():
     findMethodsWithLongParameterList(g)
     findConstructorsWithLongParameterList(g)
     findDataClasses(g)
-    # write smells detection table
-    writeLogBadSmells(bad_smells)
 
 
 if __name__ == "__main__":
-    # Global variables used only for Latex output purpose
-    global bad_smells
-    bad_smells = []
     main()
