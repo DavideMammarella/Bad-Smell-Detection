@@ -6,7 +6,7 @@ individ_creator = importlib.import_module("individ-creator")
 def test_populate_ontology():
   world = World()
   onto = world.get_ontology("tree.owl").load()
-  tree = javalang.parse.parse("class class_1 {"
+  tree = javalang.parse.parse("class classTest {"
                               "   int x, y;"
                               "   private methodConstructor(){}"
                               "   protected void methodEmpty(string a){}"
