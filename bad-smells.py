@@ -81,7 +81,11 @@ def find_long_methods(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    write_log_query("Long methods", query_result)
+
+    try:
+        write_log_query("Long methods", query_result)
+    except:
+        return query_result
 
 
 def find_long_constructors(g):
@@ -104,7 +108,11 @@ def find_long_constructors(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    write_log_query("Long constructors", query_result)
+
+    try:
+        write_log_query("Long constructors", query_result)
+    except:
+        return query_result
 
 
 def find_large_classes(g):
@@ -125,7 +133,10 @@ def find_large_classes(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    write_log_query("Large classes", query_result)
+    try:
+        write_log_query("Large classes", query_result)
+    except:
+        return query_result
 
 
 def find_methods_with_switch(g):
@@ -148,7 +159,11 @@ def find_methods_with_switch(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    write_log_query("Methods with switch statements", query_result)
+
+    try:
+        write_log_query("Methods with switch statements", query_result)
+    except:
+        return query_result
 
 
 def find_constructors_with_switch(g):
@@ -171,7 +186,11 @@ def find_constructors_with_switch(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    write_log_query("Constructors with switch statements", query_result)
+
+    try:
+        write_log_query("Constructors with switch statements", query_result)
+    except:
+        return query_result
 
 
 def find_methods_with_long_parameter_list(g):
@@ -193,7 +212,11 @@ def find_methods_with_long_parameter_list(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    write_log_query("Methods with long parameter list", query_result)
+
+    try:
+        write_log_query("Methods with long parameter list", query_result)
+    except:
+        return query_result
 
 
 def find_constructors_with_long_parameter_list(g):
@@ -215,7 +238,10 @@ def find_constructors_with_long_parameter_list(g):
         initNs={"tree": "http://test.org/onto.owl#"})
 
     query_result = g.query(q)
-    write_log_query("Constructors with long parameter list", query_result)
+    try:
+        write_log_query("Constructors with long parameter list", query_result)
+    except:
+        return query_result
 
 
 def find_data_classes(g):
@@ -251,8 +277,11 @@ def find_data_classes(g):
 
     getset_classes_query_result = g.query(q1)
     all_classes_query_result = g.query(q2)
-    write_log_data_classes_and_bad_smells(getset_classes_query_result, all_classes_query_result)
 
+    try:
+        write_log_data_classes_and_bad_smells(getset_classes_query_result, all_classes_query_result)
+    except:
+        return getset_classes_query_result, all_classes_query_result
 
 def main():
     """
