@@ -4,10 +4,20 @@ import importlib
 onto_creator = importlib.import_module("onto-creator")
 individ_creator = importlib.import_module("individ-creator")
 
+def create_ontology():
+    world = World()
+    onto_creator.main()
+    onto = world.get_ontology("tree.owl").load()
+    return onto
+
+def delete_ontology():
+    try:
+        os.remove("tree.owl")
+    except OSError:
+        pass
+
 def test_populate_ontology():
-  world = World()
-  onto_creator.main()
-  onto = world.get_ontology("tree.owl").load()
+  onto = create_ontology()
   tree = javalang.parse.parse("class classTest {"
                               "   int x, y;"
                               "   private methodConstructor(){}"
@@ -54,4 +64,6 @@ def test_populate_ontology():
   assert a.body[4].body[7].is_a[0].name == "TryStatement"
   assert a.body[4].body[8].is_a[0].name == "StatementExpression"
   assert a.body[4].body[9].is_a[0].name == "CatchClause"
+
+  delete_ontology()
 

@@ -2,10 +2,20 @@ from owlready2 import *
 import importlib
 onto_creator = importlib.import_module("onto-creator")
 
-def test_class_hierarchy():
+def create_ontology():
     world = World()
     onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
+    return onto
+
+def delete_ontology():
+    try:
+        os.remove("tree.owl")
+    except OSError:
+        pass
+
+def test_class_hierarchy():
+    onto = create_ontology()
 
     class_hierarchy = ["Annotation", "ArrayInitializer", "CompilationUnit", "Declaration",
                        "Documented", "ElementArrayValue", "ElementValuePair", "EnhancedForControl",
@@ -17,11 +27,10 @@ def test_class_hierarchy():
         assert cd.name == element
         assert len(cd.is_a) == 1
 
+    delete_ontology()
 
 def test_class_count():
-    world = World()
-    onto_creator.main()
-    onto = world.get_ontology("tree.owl").load()
+    onto = create_ontology()
 
     count = 1  # Thing get excluded in onto.classes()
     for _ in onto.classes():
@@ -29,11 +38,11 @@ def test_class_count():
 
     assert count == 78
 
+    delete_ontology()
+
 
 def test_object_property_count():
-    world = World()
-    onto_creator.main()
-    onto = world.get_ontology("tree.owl").load()
+    onto = create_ontology()
 
     count = 0
     for _ in onto.object_properties():
@@ -41,11 +50,11 @@ def test_object_property_count():
 
     assert count == 2
 
+    delete_ontology()
+
 
 def test_data_property_count():
-    world = World()
-    onto_creator.main()
-    onto = world.get_ontology("tree.owl").load()
+    onto = create_ontology()
 
     count = 0
     for _ in onto.data_properties():
@@ -53,11 +62,11 @@ def test_data_property_count():
 
     assert count == 65
 
+    delete_ontology()
+
 
 def test_classes():
-    world = World()
-    onto_creator.main()
-    onto = world.get_ontology("tree.owl").load()
+    onto = create_ontology()
 
     # Class
     cd = onto["ClassDeclaration"]
@@ -65,11 +74,11 @@ def test_classes():
     assert len(cd.is_a) == 1
     assert cd.is_a[0].name == "TypeDeclaration"
 
+    delete_ontology()
+
 
 def test_class_members():
-    world = World()
-    onto_creator.main()
-    onto = world.get_ontology("tree.owl").load()
+    onto = create_ontology()
 
     class_members = ["MethodDeclaration", "FieldDeclaration"]
     for class_member in class_members:
@@ -85,11 +94,11 @@ def test_class_members():
     assert cd.is_a[0].name == "Declaration"
     assert cd.is_a[1].name == "Documented"
 
+    delete_ontology()
+
 
 def test_statements():
-    world = World()
-    onto_creator.main()
-    onto = world.get_ontology("tree.owl").load()
+    onto = create_ontology()
 
     cd = onto["Statement"]
     assert cd.name == "Statement"
@@ -106,13 +115,15 @@ def test_statements():
         assert len(cd.is_a) == 1
         assert cd.is_a[0].name == "Statement"
 
+    delete_ontology()
+
 
 def test_parameters():
-    world = World()
-    onto_creator.main()
-    onto = world.get_ontology("tree.owl").load()
+    onto = create_ontology()
 
     cd = onto["FormalParameter"]
     assert cd.name == "FormalParameter"
     assert len(cd.is_a) == 1
     assert cd.is_a[0].name == "Declaration"
+
+    delete_ontology()
