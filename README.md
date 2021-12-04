@@ -42,3 +42,10 @@ All the files that will be generated as output will be available in the project 
 ### Access files
 - All ontologies, i.e. files with the extension `.owl`, can be opened with [Protegè](https://protege.stanford.edu) <br>
 - It is advisable to open the `log.txt` file with a [Latex editor](https://www.overleaf.com/), as it contains bad smell metrics tables in Latex format
+
+## Tests
+All the scripts in the application have been tested. <br>
+In order to reproduce the tests, it is necessary to access the application folder with the above command and execute the following command:
+```
+py.test
+```
