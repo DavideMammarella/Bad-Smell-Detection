@@ -1,8 +1,10 @@
 from owlready2 import *
-
+import importlib
+onto_creator = importlib.import_module("onto-creator")
 
 def test_class_hierarchy():
     world = World()
+    onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
 
     class_hierarchy = ["Annotation", "ArrayInitializer", "CompilationUnit", "Declaration",
@@ -18,6 +20,7 @@ def test_class_hierarchy():
 
 def test_class_count():
     world = World()
+    onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
 
     count = 1  # Thing get excluded in onto.classes()
@@ -29,6 +32,7 @@ def test_class_count():
 
 def test_object_property_count():
     world = World()
+    onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
 
     count = 0
@@ -40,6 +44,7 @@ def test_object_property_count():
 
 def test_data_property_count():
     world = World()
+    onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
 
     count = 0
@@ -51,6 +56,7 @@ def test_data_property_count():
 
 def test_classes():
     world = World()
+    onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
 
     # Class
@@ -62,6 +68,7 @@ def test_classes():
 
 def test_class_members():
     world = World()
+    onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
 
     class_members = ["MethodDeclaration", "FieldDeclaration"]
@@ -81,6 +88,7 @@ def test_class_members():
 
 def test_statements():
     world = World()
+    onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
 
     cd = onto["Statement"]
@@ -101,6 +109,7 @@ def test_statements():
 
 def test_parameters():
     world = World()
+    onto_creator.main()
     onto = world.get_ontology("tree.owl").load()
 
     cd = onto["FormalParameter"]
