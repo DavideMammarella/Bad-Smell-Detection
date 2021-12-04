@@ -18,7 +18,7 @@ def delete_ontology():
 
 def test_populate_ontology():
   onto = create_ontology()
-  tree = javalang.parse.parse("class classTest {"
+  tree = javalang.parse.parse("class ClassTest {"
                               "   int x, y;"
                               "   private methodConstructor(){}"
                               "   protected void methodEmpty(string a){}"

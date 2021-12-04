@@ -31,7 +31,6 @@ def test_class_hierarchy():
 
 def test_class_count():
     onto = create_ontology()
-
     count = 1  # Thing get excluded in onto.classes()
     for _ in onto.classes():
         count = count + 1
@@ -43,7 +42,6 @@ def test_class_count():
 
 def test_object_property_count():
     onto = create_ontology()
-
     count = 0
     for _ in onto.object_properties():
         count = count + 1
@@ -55,7 +53,6 @@ def test_object_property_count():
 
 def test_data_property_count():
     onto = create_ontology()
-
     count = 0
     for _ in onto.data_properties():
         count = count + 1
@@ -67,8 +64,6 @@ def test_data_property_count():
 
 def test_classes():
     onto = create_ontology()
-
-    # Class
     cd = onto["ClassDeclaration"]
     assert cd.name == "ClassDeclaration"
     assert len(cd.is_a) == 1
@@ -79,7 +74,6 @@ def test_classes():
 
 def test_class_members():
     onto = create_ontology()
-
     class_members = ["MethodDeclaration", "FieldDeclaration"]
     for class_member in class_members:
         cd = onto[class_member]
@@ -99,7 +93,6 @@ def test_class_members():
 
 def test_statements():
     onto = create_ontology()
-
     cd = onto["Statement"]
     assert cd.name == "Statement"
     assert len(cd.is_a) == 1
@@ -120,7 +113,6 @@ def test_statements():
 
 def test_parameters():
     onto = create_ontology()
-
     cd = onto["FormalParameter"]
     assert cd.name == "FormalParameter"
     assert len(cd.is_a) == 1
