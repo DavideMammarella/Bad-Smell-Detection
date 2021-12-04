@@ -128,7 +128,7 @@ def find_large_classes(g):
                 ?method a tree:MethodDeclaration .
                 ?method tree:jname ?mn .
             } GROUP BY ?class
-            HAVING (COUNT(?method) >= 20)
+            HAVING (COUNT(?method) >= 10)
             ORDER BY DESC(COUNT(*))""",
         initNs={"tree": "http://test.org/onto.owl#"})
 
