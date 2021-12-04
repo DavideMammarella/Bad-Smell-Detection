@@ -1,10 +1,12 @@
 from owlready2 import *
 import javalang
 import importlib
+onto_creator = importlib.import_module("onto-creator")
 individ_creator = importlib.import_module("individ-creator")
 
 def test_populate_ontology():
   world = World()
+  onto_creator.main()
   onto = world.get_ontology("tree.owl").load()
   tree = javalang.parse.parse("class classTest {"
                               "   int x, y;"
