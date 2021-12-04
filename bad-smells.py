@@ -295,7 +295,7 @@ def main():
     bad_smells = []
 
     g = rdflib.Graph()
-    g.load("tree2.owl")
+    g.parse("tree2.owl")
     find_long_methods(g)
     find_long_constructors(g)
     find_large_classes(g)
